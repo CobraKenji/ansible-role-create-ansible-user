@@ -1,0 +1,20 @@
+#
+---
+- hosts: all
+  gather_facts: false
+  vars_prompt:
+    - name: new_admin_user
+      prompt: "Enter new sudoer username"
+      default: ''
+      private: no
+      failed_when: new_admin_user == '' or new_admin_user == 'root'
+    - name: adminpw
+      prompt: "Carefully enter password"
+      default: ''
+      private: yes
+      failed_when: adminpw == ''
+
+  tasks:
+    - include: tasks/main.yml
+
+#

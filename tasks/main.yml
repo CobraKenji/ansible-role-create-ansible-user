@@ -1,0 +1,85 @@
+# tasks file for create-ansible-user
+
+- name: verifying {{ new_admin_user }} is sudoer
+  user:
+    name={{ new_admin_user }}
+    password='{{ adminpw | password_hash('sha512') }}'
+    groups=wheel
+    append=yes
+    createhome=yes
+    state=present
+    shell=/bin/bash
+    home=/home/{{ new_admin_user }}
+  become: yes
+  become_method: sudo
+
+### Might be more a hack and not very secure...
+#- name: Ensure passwordless sudo for '{{ new_admin_user }}'
+#  lineinfile:
+#    dest: /etc/sudoers
+#    state: present
+#    regexp: '^%{{ new_admin_user }}'
+#    line: '%{{ new_admin_user }} ALL=(ALL) NOPASSWD: ALL'
+#    validate: 'visudo -cf %s'
+#  become: yes
+#  become_method: sudo
+
+# confirm ~/.ssh exists
+- name: Validate path, create if not present
+  file:
+    path: /home/{{ new_admin_user }}/.ssh
+    state: directory
+    mode: 0755
+  become: yes
+  become_method: sudo
+
+# confirm ~/.ssh/authorized_keys exists
+- name: touch ~/.ssh/authorized_keys
+  file:
+    path: /home/{{ new_admin_user }}/.ssh/authorized_keys
+    state: touch
+    mode: 0755
+  become: yes
+  become_method: sudo
+
+# debug task
+- stat:
+    path: /home/{{ new_admin_user }}/.ssh
+  register: ssh_exist
+  become: yes
+  become_method: sudo
+- debug:
+    msg: "/home/{{ new_admin_user }}/.ssh and is a directory"
+  when: ssh_exist.stat.isdir is defined and ssh_exist.stat.isdir
+
+# confirm ~/.ssh/authorized_keys exists
+- name: touch ~/.ssh/authorized_keys
+  file:
+    path: /home/{{ new_admin_user }}/.ssh/authorized_keys
+    state: touch
+    mode: 0755
+  become: yes
+  become_method: sudo
+
+# add your user's ssh public key to files/rsa.pub
+- name: ensure pubkey is in authorized_keys
+  lineinfile:
+    path: "/home/{{ new_admin_user }}/.ssh/authorized_keys"
+    line: "{{ lookup('file', 'files/rsa.pub') }}"
+  become: yes
+  become_method: sudo
+
+
+- name: Set up authorized keys for the {{ new_admin_user }} user
+  authorized_key:
+    user: "{{ new_admin_user }}"
+    key: '{{ item }}'
+    state: present
+  with_file:
+    - files/rsa.pub
+
+  become: yes
+  become_method: sudo
+
+
+  #
