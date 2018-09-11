@@ -1,2 +1,4 @@
 ---
-# vars file for create-ansible-user
+# vars file for ansible-role-create-ansible-user
+# no vars
+#
