@@ -1,4 +1,4 @@
-# tasks file for create-ansible-user
+# tasks file for ansible-role-create-ansible-user
 
 - name: verifying {{ new_admin_user }} is sudoer
   user:
