@@ -1,2 +1,4 @@
 ---
-# handlers file for create-ansible-user
+# handlers file for ansible-role-create-ansible-user
+# no handlers
+#
