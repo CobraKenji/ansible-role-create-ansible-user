@@ -1,4 +1,6 @@
-#
+# test playbook for ansible-role-create-ansible-user
+# prompts are required unless you define new_admin_user and adminpw
+
 ---
 - hosts: all
   gather_facts: false
