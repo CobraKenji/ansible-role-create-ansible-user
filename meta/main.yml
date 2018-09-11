@@ -1,6 +1,6 @@
 galaxy_info:
   author: CobraKenji
-  description: add new sudo user and put SSH authorized_keys
+  description: add new sudo user and put SSH authorized_keys; optional passwordless sudo
   company: my company
 
   # If the issue tracker for your role is not on github, uncomment the
