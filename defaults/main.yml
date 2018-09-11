@@ -1,5 +1,4 @@
 ---
-# defaults file for create-ansible-user
-
-
+# defaults file for ansible-role-create-ansible-user
+gather_facts: false
 #
